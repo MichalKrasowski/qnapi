@@ -365,7 +365,7 @@ bool QNapisy24Engine::lookForSubtitles(QString lang)
         return false;
 
     QByteArray respData = reply->readAll();
-    if (not respData.startsWith("OK-2"))
+    if (!respData.startsWith("OK-2"))
         return false;
 
     QFile file(tmpPackedFile);
@@ -378,7 +378,7 @@ bool QNapisy24Engine::lookForSubtitles(QString lang)
     if (!r)
         return false;
 
-    subtitlesList << QNapiSubtitleInfo(	lang,
+    subtitlesList << QNapiSubtitleInfo( lang,
                                         engineName(),
                                         tmpPackedFile,
                                         QFileInfo(movie).completeBaseName(),
@@ -407,25 +407,30 @@ bool QNapisy24Engine::unpack()
 
     QProcess p7zip;
 
-    p7zip.start(p7zipPath, QStringList() << "l" << tmpPackedFile);
+    p7zip.start(p7zipPath, QStringList() << "l" << "-slt" << tmpPackedFile);
     if (!p7zip.waitForFinished(5000))
         return false;
 
     QString resp = QByteArray(p7zip.readAll());
-    QRegExp r("\n\\d{4}-\\d{2}-\\d{2} +\\d{1,2}:\\d{2}:\\d{1,2} +\\.+ +\\d+ +\\d+ +([^\n]+)\n");
+#ifdef Q_OS_WIN
+    QRegExp r("\r\nPath = ([^\r\n]*)\r\n");
+#else
+    QRegExp r("\nPath = ([^\n]*)\n");
+#endif
     r.setPatternSyntax(QRegExp::RegExp2);
-    if (r.indexIn(resp) == -1)
+
+    if (r.lastIndexIn(resp) == -1)
         return false;
 
-    // subtitlesTmp = tmpPath + "/" + QFileInfo(fileName).completeBaseName() + ".txt";
-    subtitlesTmp = tmpPath + "/" + r.cap(1);
+    QString subFileName = r.cap(1);
+
+    subtitlesTmp = tmpPath + "/" + subFileName;
     if(QFile::exists(subtitlesTmp))
         QFile::remove(subtitlesTmp);
 
     QStringList args;
     args << "e" << "-y" << ("-o" + tmpPath) << tmpPackedFile;
 
-    // QProcess p7zip;
     p7zip.start(p7zipPath, args);
 
     // Rozpakowujemy napisy max w ciagu 5 sekund
@@ -435,5 +440,8 @@ bool QNapisy24Engine::unpack()
 
 void QNapisy24Engine::cleanup()
 {
-
+    if(QFile::exists(tmpPackedFile))
+        QFile::remove(tmpPackedFile);
+    if(QFile::exists(subtitlesTmp))
+        QFile::remove(subtitlesTmp);
 }

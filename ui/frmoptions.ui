@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>679</width>
-    <height>428</height>
+    <width>642</width>
+    <height>430</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,21 +28,23 @@
        <string>Główne</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="2">
-        <widget class="QPushButton" name="pb7zPathSelect">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../res/resources.qrc">
-           <normaloff>:/ui/folder.png</normaloff>:/ui/folder.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="lbTmpPath">
          <property name="text">
           <string>Ścieżka do katalogu tymczasowego:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="cbLangBackup"/>
+       </item>
+       <item row="7" column="0" colspan="2">
+        <widget class="QCheckBox" name="cbShowDockIcon">
+         <property name="text">
+          <string>Pokazuj ikonę w doku systemowym (wymaga ponownego uruchomienia aplikacji)</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -59,6 +61,24 @@
          </property>
         </widget>
        </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbFfprobePath">
+         <property name="text">
+          <string>Ścieżka do programu ffprobe:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="pbFfprobePathSelect">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../res/resources.qrc">
+           <normaloff>:/ui/folder.png</normaloff>:/ui/folder.png</iconset>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0">
         <widget class="QLabel" name="lb7zPath">
          <property name="text">
@@ -66,21 +86,91 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="6" column="0" colspan="3">
+        <layout class="QHBoxLayout" name="_2">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="cbChangePermissions">
+           <property name="text">
+            <string>Zmień uprawnienia do pliku z napisami na: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="sbUPerm">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <number>7</number>
+           </property>
+           <property name="value">
+            <number>6</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="sbGPerm">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <number>7</number>
+           </property>
+           <property name="value">
+            <number>4</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="sbOPerm">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximum">
+            <number>7</number>
+           </property>
+           <property name="value">
+            <number>4</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>130</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="2">
+        <widget class="QPushButton" name="pb7zPathSelect">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../res/resources.qrc">
+           <normaloff>:/ui/folder.png</normaloff>:/ui/folder.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
         <widget class="QLineEdit" name="leTmpPath">
          <property name="text">
           <string>/tmp</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="lbLang">
-         <property name="text">
-          <string>Preferowany jezyk napisów:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
+       <item row="2" column="2">
         <widget class="QPushButton" name="pbTmpPathSelect">
          <property name="text">
           <string/>
@@ -91,10 +181,24 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1" colspan="2">
+       <item row="3" column="0">
+        <widget class="QLabel" name="lbLang">
+         <property name="text">
+          <string>Preferowany jezyk napisów:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
         <widget class="QComboBox" name="cbLang"/>
        </item>
-       <item row="5" column="0" colspan="3">
+       <item row="4" column="0">
+        <widget class="QLabel" name="lbLangBackup">
+         <property name="text">
+          <string>Zapasowy jezyk napisów:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0" colspan="2">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -107,20 +211,23 @@
          </property>
         </spacer>
        </item>
-       <item row="4" column="0" colspan="3">
-        <widget class="QCheckBox" name="cbShowDockIcon">
-         <property name="text">
-          <string>Pokazuj ikonę w doku systemowym (wymaga ponownego uruchomienia aplikacji)</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0" colspan="3">
+       <item row="5" column="0" colspan="2">
         <widget class="QCheckBox" name="cbNoBackup">
          <property name="text">
           <string>Nie twórz kopii istniejących napisów. Nadpisuj je bez pytania.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="leFfprobePath">
+         <property name="text">
+          <string>/usr/bin/ffprobe</string>
+         </property>
+         <property name="cursorPosition">
+          <number>16</number>
+         </property>
+         <property name="readOnly">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -281,8 +388,8 @@
       <attribute name="title">
        <string>Przetwarzanie napisów</string>
       </attribute>
-      <layout class="QVBoxLayout">
-       <item>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
         <widget class="QGroupBox" name="gbPpEnable">
          <property name="title">
           <string>Włącz przetwarzanie pobranych napisów</string>
@@ -293,28 +400,44 @@
          <property name="checked">
           <bool>true</bool>
          </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <widget class="QCheckBox" name="cbChangeEncoding">
-            <property name="text">
-             <string>Zmień kodowanie znaków w pobranych napisach</string>
-            </property>
-           </widget>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0" colspan="4">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="lbEncoding">
+              <property name="text">
+               <string>Kodowanie znaków:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cbEncodingMethod">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <item>
+               <property name="text">
+                <string>Pozostaw oryginalne</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Konwertuj (ustawienia poniżej)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Zamień znaki diakrytyczne na ich odpowiedniki ASCII</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
           </item>
-          <item>
-           <widget class="QCheckBox" name="cbAutoDetectEncoding">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Próbuj automatycznie wykrywać kodowanie źródłowe</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
+          <item row="2" column="0" colspan="4">
            <layout class="QHBoxLayout">
             <item>
              <spacer>
@@ -440,7 +563,7 @@
             </item>
            </layout>
           </item>
-          <item>
+          <item row="3" column="0" colspan="4">
            <layout class="QHBoxLayout" name="horizontalLayout">
             <property name="topMargin">
              <number>0</number>
@@ -473,14 +596,7 @@
             </item>
            </layout>
           </item>
-          <item>
-           <widget class="QCheckBox" name="cbRemoveLines">
-            <property name="text">
-             <string>Usuń z pliku z napisami linie, które zawierają następujące słowa:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
+          <item row="5" column="0" colspan="4">
            <widget class="QTextEdit" name="teRemoveWords">
             <property name="enabled">
              <bool>false</bool>
@@ -489,7 +605,7 @@
              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.Lucida Grande UI'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'DejaVu Sans'; font-size:10pt;&quot;&gt;movie info&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;&quot;&gt;&lt;span style=&quot; font-family:'DejaVu Sans'; font-size:10pt;&quot;&gt;synchro&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -498,73 +614,104 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout">
-            <property name="topMargin">
-             <number>0</number>
+          <item row="6" column="0">
+           <widget class="QLabel" name="lbSubFormat">
+            <property name="text">
+             <string>Format napisów:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QComboBox" name="cbSubFormat">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
             <item>
-             <widget class="QCheckBox" name="cbChangePermissions">
-              <property name="text">
-               <string>Zmień uprawnienia do pliku z napisami na: </string>
-              </property>
-             </widget>
+             <property name="text">
+              <string>Pozostaw oryginalny</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QLabel" name="lbSubExtension">
+            <property name="text">
+             <string>Rozszerzenie napisów:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="3">
+           <widget class="QComboBox" name="cbSubExtension">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <item>
+             <property name="text">
+              <string>Domyślne</string>
+             </property>
             </item>
             <item>
-             <widget class="QSpinBox" name="sbUPerm">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="maximum">
-               <number>7</number>
-              </property>
-              <property name="value">
-               <number>6</number>
-              </property>
-             </widget>
+             <property name="text">
+              <string>srt</string>
+             </property>
             </item>
             <item>
-             <widget class="QSpinBox" name="sbGPerm">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="maximum">
-               <number>7</number>
-              </property>
-              <property name="value">
-               <number>4</number>
-              </property>
-             </widget>
+             <property name="text">
+              <string>sub</string>
+             </property>
             </item>
             <item>
-             <widget class="QSpinBox" name="sbOPerm">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="maximum">
-               <number>7</number>
-              </property>
-              <property name="value">
-               <number>4</number>
-              </property>
-             </widget>
+             <property name="text">
+              <string>txt</string>
+             </property>
             </item>
-            <item>
-             <spacer>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>130</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
+           </widget>
+          </item>
+          <item row="7" column="0" colspan="4">
+           <widget class="QCheckBox" name="cbSkipConvertAds">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Nie dodawaj informacji o QNapi przy konwersji pomiędzy formatami</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="4">
+           <widget class="QCheckBox" name="cbAutoDetectEncoding">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Próbuj automatycznie wykrywać kodowanie źródłowe</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="4">
+           <widget class="QCheckBox" name="cbRemoveLines">
+            <property name="text">
+             <string>Usuń z pliku z napisami linie, które zawierają następujące słowa:</string>
+            </property>
+           </widget>
           </item>
          </layout>
+         <zorder>cbAutoDetectEncoding</zorder>
+         <zorder>cbRemoveLines</zorder>
+         <zorder>teRemoveWords</zorder>
+         <zorder>lbSubFormat</zorder>
+         <zorder>cbSubFormat</zorder>
+         <zorder>lbSubExtension</zorder>
+         <zorder>cbSubExtension</zorder>
+         <zorder>cbSkipConvertAds</zorder>
         </widget>
        </item>
       </layout>
@@ -627,18 +774,12 @@ p, li { white-space: pre-wrap; }
   <tabstop>pbEngineInfo</tabstop>
   <tabstop>cbSearchPolicy</tabstop>
   <tabstop>cbDownloadPolicy</tabstop>
-  <tabstop>gbPpEnable</tabstop>
-  <tabstop>cbChangeEncoding</tabstop>
   <tabstop>cbAutoDetectEncoding</tabstop>
   <tabstop>cbEncFrom</tabstop>
   <tabstop>cbEncTo</tabstop>
   <tabstop>cbShowAllEncodings</tabstop>
   <tabstop>cbRemoveLines</tabstop>
   <tabstop>teRemoveWords</tabstop>
-  <tabstop>cbChangePermissions</tabstop>
-  <tabstop>sbUPerm</tabstop>
-  <tabstop>sbGPerm</tabstop>
-  <tabstop>sbOPerm</tabstop>
   <tabstop>pbRestoreDefaults</tabstop>
   <tabstop>pbCancel</tabstop>
   <tabstop>pbSave</tabstop>
@@ -686,8 +827,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>208</y>
+     <x>168</x>
+     <y>234</y>
     </hint>
     <hint type="destinationlabel">
      <x>129</x>
@@ -702,12 +843,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>117</x>
-     <y>338</y>
+     <x>108</x>
+     <y>225</y>
     </hint>
     <hint type="destinationlabel">
-     <x>348</x>
-     <y>338</y>
+     <x>335</x>
+     <y>227</y>
     </hint>
    </hints>
   </connection>
@@ -718,12 +859,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>162</x>
-     <y>338</y>
+     <x>176</x>
+     <y>224</y>
     </hint>
     <hint type="destinationlabel">
-     <x>421</x>
-     <y>343</y>
+     <x>369</x>
+     <y>234</y>
     </hint>
    </hints>
   </connection>
@@ -734,12 +875,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>336</y>
+     <x>124</x>
+     <y>225</y>
     </hint>
     <hint type="destinationlabel">
-     <x>503</x>
-     <y>345</y>
+     <x>428</x>
+     <y>222</y>
     </hint>
    </hints>
   </connection>

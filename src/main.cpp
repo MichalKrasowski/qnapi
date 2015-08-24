@@ -33,185 +33,198 @@ void sigHandler(int);
 
 int main(int argc, char **argv)
 {
-	bool useGui = !QNapiCli::isCliCall(argc, argv);
+    bool useGui = !QNapiCli::isCliCall(argc, argv);
 
-	regSignal();
+    regSignal();
 
-	if(useGui)
-	{
-		QNapiApp app(argc, argv, true, "QNapi");
+    if(useGui)
+    {
+        QNapiApp app(argc, argv, true, "QNapi");
 
-		QStringList pathList = parseArgs(argc, argv);
+        QStringList pathList = parseArgs(argc, argv);
 
-		QString resourceDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-		QTranslator cuteTranslator;
-		cuteTranslator.load("qt_" + QLocale::system().name(), resourceDir);
-		app.installTranslator(&cuteTranslator);
-		app.setQuitOnLastWindowClosed(false);
+        QString resourceDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+        QTranslator cuteTranslator;
+        cuteTranslator.load("qt_" + QLocale::system().name(), resourceDir);
+        app.installTranslator(&cuteTranslator);
+        app.setQuitOnLastWindowClosed(false);
 
-		if(app.arguments().contains("-o") || app.arguments().contains("--options"))
-		{
-			app.setQuitOnLastWindowClosed(true);
-			app.showSettings();
-			return 0;
-		}
+        if(app.arguments().contains("-o") || app.arguments().contains("--options"))
+        {
+            app.setQuitOnLastWindowClosed(true);
+            app.showSettings();
+            return 0;
+        }
 
-		if(!app.isInstanceAllowed())
-		{
-			for(int i = 0; i < pathList.size(); i++)
-				app.sendRequest(pathList[i]);
-			return 0;
-		}
-		
-		if(GlobalConfig().firstRun())
-		{
-			if(QMessageBox::question(0, QObject::tr("Pierwsze uruchomienie"),
-					QObject::tr("To jest pierwsze uruchomienie programu QNapi. Czy chcesz go "
-					"teraz skonfigurować?"), QMessageBox::Yes | QMessageBox::No )
-				== QMessageBox::Yes )
-			{
-				app.showSettings();
-			}
-		}
+        if(!app.isInstanceAllowed())
+        {
+            for(int i = 0; i < pathList.size(); i++) {
+                QString & fileName = pathList[i];
+                QFileInfo fi(fileName);
+                app.sendRequest(fi.absoluteFilePath());
+            }
+            return 0;
+        }
+        
+        if(GlobalConfig().firstRun())
+        {
+            if(QMessageBox::question(0, QObject::tr("Pierwsze uruchomienie"),
+                    QObject::tr("To jest pierwsze uruchomienie programu QNapi. Czy chcesz go "
+                    "teraz skonfigurować?"), QMessageBox::Yes | QMessageBox::No )
+                == QMessageBox::Yes )
+            {
+                app.showSettings();
+            }
+        }
 
-		// Jesli podano parametry, ustawiamy tzw. batch mode
-		if(pathList.size() > 0)
-		{
-			app.progress()->setBatchMode(true);
+        // Jesli podano parametry, ustawiamy tzw. batch mode
+        if(pathList.size() > 0)
+        {
+            app.progress()->setBatchMode(true);
 
-			QString batchLang, p;
-			bool invalidLang = false;
+            QString batchLang, batchLangBackup, p;
+            bool invalidLang = false, batchLangBackupPassed = false;
 
-			for(int i = 1; i < argc; i++)
-			{
-				p = argv[i];
+            for(int i = 1; i < argc; i++)
+            {
+                p = argv[i];
 
-				if((p == "-l") || (p == "--language"))
-				{
-					++i;
-					if(i < argc)
-					{
-						batchLang = QNapiLanguage(argv[i]).toTwoLetter();
-						if(batchLang.isEmpty())
-							invalidLang = true;
-					} else invalidLang = true;
-					break;
-				}
-			}
+                if((p == "-l") || (p == "--lang"))
+                {
+                    ++i;
+                    if(i < argc)
+                    {
+                        batchLang = QNapiLanguage(argv[i]).toTwoLetter();
+                        if(batchLang.isEmpty())
+                            invalidLang = true;
+                    } else invalidLang = true;
 
-			if(invalidLang)
-			{
-				if(QMessageBox::question(0, "QNapi", "Niepoprawny kod językowy!\n"
-						"Czy chcesz pobrać napisy w domyślnym języku?",
-						QMessageBox::Yes | QMessageBox::No)
-					!= QMessageBox::Yes)
-				{
-					return 0;
-				}
-			}
+                }
+                else if((p == "-lb") || (p == "--lang-backup"))
+                {
+                    ++i;
+                    if(i < argc)
+                    {
+                        batchLangBackup = QNapiLanguage(argv[i]).toTwoLetter();
+                        batchLangBackupPassed = true;
+                    }
+                    break;
+                }
+            }
 
-			app.progress()->setBatchLanguage(batchLang);
+            if(invalidLang)
+            {
+                if(QMessageBox::question(0, "QNapi", "Niepoprawny kod językowy!\n"
+                        "Czy chcesz pobrać napisy w domyślnym języku?",
+                        QMessageBox::Yes | QMessageBox::No)
+                    != QMessageBox::Yes)
+                {
+                    return 0;
+                }
+            }
 
-			if(QFileInfo(pathList.at(0)).isDir())
-			{
-				if(!app.showScanDialog(pathList.at(0)))
-					return 1;
-			}
-			else
-			{
-				app.progress()->enqueueFiles(pathList);
-				if(!app.progress()->download()) return 1;
-			}
-		}
+            app.progress()->setBatchLanguages(batchLang, batchLangBackup, batchLangBackupPassed);
 
-		// Jesli nie dzialamy w trybie pobierania, mozemy ew. utworzyc ikone w tray-u
-		// badz pokazac okno wyboru plikow z filmami
-		if(!app.progress()->isBatchMode())
-		{
-			// Jesli nie ma traya, od razu wyswietlamy okienko z wyborem pliku
-			if(!QSystemTrayIcon::isSystemTrayAvailable())
-			{
-				if(!app.progress()->isBatchMode())
-				{
-					app.progress()->setBatchMode(true);
-					if(!app.showOpenDialog())
-						return 1;
-				}
-			}
-			else // Jesli ikona w tray-u jest obsligiwana, tworzymy ja
-			{
-				app.createTrayIcon();
-			}
-		}
+            if(QFileInfo(pathList.at(0)).isDir())
+            {
+                if(!app.showScanDialog(pathList.at(0)))
+                    return 1;
+            }
+            else
+            {
+                app.progress()->enqueueFiles(pathList);
+                if(!app.progress()->download()) return 1;
+            }
+        }
 
-		return app.exec();
-	}
-	else
-	{
-		QNapiCli app(argc, argv);
-		return app.exec();
-	}
+        // Jesli nie dzialamy w trybie pobierania, mozemy ew. utworzyc ikone w tray-u
+        // badz pokazac okno wyboru plikow z filmami
+        if(!app.progress()->isBatchMode())
+        {
+            // Jesli nie ma traya, od razu wyswietlamy okienko z wyborem pliku
+            if(!QSystemTrayIcon::isSystemTrayAvailable())
+            {
+                if(!app.progress()->isBatchMode())
+                {
+                    app.progress()->setBatchMode(true);
+                    if(!app.showOpenDialog())
+                        return 1;
+                }
+            }
+            else // Jesli ikona w tray-u jest obsligiwana, tworzymy ja
+            {
+                app.createTrayIcon();
+            }
+        }
+
+        return app.exec();
+    }
+    else
+    {
+        QNapiCli app(argc, argv);
+        return app.exec();
+    }
 }
 
 QStringList parseArgs(int argc, char **argv)
 {
-	QStringList pathList;
+    QStringList pathList;
 
-	for(int i = 1; i < argc; i++)
-	{
-		QString p = argv[i];
+    for(int i = 1; i < argc; i++)
+    {
+        QString p = argv[i];
 
-		if(p.startsWith("file://"))
-			p = p.remove(0, 7);
+        if(p.startsWith("file://"))
+            p = p.remove(0, 7);
 
-		if((pathList.size() == 0) && QFileInfo(p).isDir())
-		{
-			pathList << p;
-			break;
-		}
+        if((pathList.size() == 0) && QFileInfo(p).isDir())
+        {
+            pathList << p;
+            break;
+        }
 
-		if(QFileInfo(p).isFile())
-			pathList << p;
-	}
+        if(QFileInfo(p).isFile())
+            pathList << p;
+    }
 
-	return pathList;
+    return pathList;
 }
 
 void regSignal()
 {
 #ifdef Q_OS_WIN
-	signal(SIGTERM, sigHandler);
-	signal(SIGINT, sigHandler);
+    signal(SIGTERM, sigHandler);
+    signal(SIGINT, sigHandler);
 #else
-	struct sigaction sa;
-	memset(&sa, 0, sizeof(struct sigaction));
-	sigemptyset(&sa.sa_mask);
-	sa.sa_handler = sigHandler;
-	sigaction(SIGTERM, &sa, 0);
-	sigaction(SIGINT, &sa, 0);
+    struct sigaction sa;
+    memset(&sa, 0, sizeof(struct sigaction));
+    sigemptyset(&sa.sa_mask);
+    sa.sa_handler = sigHandler;
+    sigaction(SIGTERM, &sa, 0);
+    sigaction(SIGINT, &sa, 0);
 #endif
 }
 
 void sigHandler(int sig)
 {
-	Q_UNUSED(sig);
+    Q_UNUSED(sig);
 
-	qDebug() << "\nQNapi: usuwanie plików tymczasowych...";
+    qDebug() << "\nQNapi: usuwanie plików tymczasowych...";
 
-	QString tmpPath = GlobalConfig().tmpPath();
+    QString tmpPath = GlobalConfig().tmpPath();
 
-	QStringList filters;
-	filters << "QNapi-*-rc";
-	filters << "QNapi.*.tmp";
+    QStringList filters;
+    filters << "QNapi-*-rc";
+    filters << "QNapi.*.tmp";
 
-	QDir dir(tmpPath);
+    QDir dir(tmpPath);
 
-	QStringList files = dir.entryList(filters);
+    QStringList files = dir.entryList(filters);
 
-	foreach(QString file, files)
-	{
-		QFile::remove(tmpPath + QDir::separator() + file);
-	}
+    foreach(QString file, files)
+    {
+        QFile::remove(tmpPath + QDir::separator() + file);
+    }
 
-	exit(666);
+    exit(666);
 }

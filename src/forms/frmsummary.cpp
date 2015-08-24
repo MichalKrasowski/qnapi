@@ -16,54 +16,39 @@
 
 frmSummary::frmSummary(QWidget * parent, Qt::WindowFlags f) : QDialog(parent, f)
 {
-	ui.setupUi(this);
+    ui.setupUi(this);
 
-	setAttribute(Qt::WA_QuitOnClose, false);
+    setAttribute(Qt::WA_QuitOnClose, false);
 
-	// workaround dla compiza?
-	move((QApplication::desktop()->width() - width()) / 2, 
-		(QApplication::desktop()->height() - height()) / 2);
+    QRect position = frameGeometry();
+    position.moveCenter(QDesktopWidget().availableGeometry().center());
+    move(position.topLeft());
 }
 
-void frmSummary::setSuccessList(const QStringList & list)
+void frmSummary::setSummaryList(const QStringList & listSuccess, const QStringList & listFailures)
 {
-	if(list.isEmpty())
-	{
-		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.tabSuccess));
-		return;
-	}
+    ui.lwSummary->clear();
 
-	ui.lwSuccess->clear();
-	foreach(QString item, list)
-	{
-		ui.lwSuccess->addItem(new QListWidgetItem(QIcon(":/ui/accept.png"),
-												QFileInfo(item).fileName()));
-	}
-	ui.lwSuccess->sortItems();
-	ui.tabWidget->setTabText(ui.tabWidget->indexOf(ui.tabSuccess),
-								tr("Pobrano napisy dla %1 %2")
-								.arg(list.size())
-								.arg(tr(list.size() > 1 ? "plików" : "pliku")));
-}
+    ui.lbSuccess->setVisible(!listSuccess.isEmpty());
+    ui.lbFail->setVisible(!listFailures.isEmpty());
 
-void frmSummary::setFailedList(const QStringList & list)
-{
-	if(list.isEmpty())
-	{
-		ui.tabWidget->removeTab(ui.tabWidget->indexOf(ui.tabFail));
-		return;
-	}
+    QIcon succIcon(":/ui/accept.png"), failIcon(":/ui/exclamation.png");
 
-	ui.lwFail->clear();
-	foreach(QString item, list)
-	{
-		ui.lwFail->addItem(new QListWidgetItem(QIcon(":/ui/exclamation.png"),
-												QFileInfo(item).fileName()));
-	}
-	ui.lwFail->sortItems();
+    foreach(QString successItem, listSuccess)
+    {
+        ui.lwSummary->addItem(new QListWidgetItem(succIcon, QFileInfo(successItem).fileName()));
+    }
 
-	ui.tabWidget->setTabText(ui.tabWidget->indexOf(ui.tabFail),
-								tr("Nie pobrano napisów dla %1 %2")
-								.arg(list.size())
-								.arg(tr(list.size() > 1 ? "plików" : "pliku")));
+    foreach(QString failureItem, listFailures)
+    {
+        ui.lwSummary->addItem(new QListWidgetItem(failIcon, QFileInfo(failureItem).fileName()));
+    }
+
+    ui.lbSuccess->setText(tr("Pobrano napisy dla %1 %2")
+                          .arg(listSuccess.size())
+                          .arg(tr(listSuccess.size() > 1 ? "plików" : "pliku")));
+
+    ui.lbFail->setText(tr("Nie pobrano napisów dla %1 %2")
+                       .arg(listFailures.size())
+                       .arg(tr(listFailures.size() > 1 ? "plików" : "pliku")));
 }

@@ -35,112 +35,135 @@
 
 enum SearchPolicy
 {
-	SP_SEARCH_ALL = 0,
-	SP_BREAK_IF_FOUND = 1
+    SP_SEARCH_ALL = 0,
+    SP_BREAK_IF_FOUND = 1
 };
 
 enum DownloadPolicy
 {
-	DP_ALWAYS_SHOW_LIST = 0,
-	DP_SHOW_LIST_IF_NEEDED = 1,
-	DP_NEVER_SHOW_LIST  = 2
+    DP_ALWAYS_SHOW_LIST = 0,
+    DP_SHOW_LIST_IF_NEEDED = 1,
+    DP_NEVER_SHOW_LIST  = 2
+};
+
+enum ChangeEncodingMethod
+{
+    CEM_ORIGINAL = 0,
+    CEM_CHANGE = 1,
+    CEM_REPLACE_DIACRITICS = 2
 };
 
 class QNapiConfig
 {
-	public:
-		void reload();
-		void save();
+    public:
+        void reload();
+        void save();
 
-		bool firstRun();
-		QString version();
+        bool firstRun();
+        QString version();
 
-		QString p7zipPath();
-		void setP7zipPath(const QString & path);
+        QString p7zipPath();
+        void setP7zipPath(const QString & path);
 
-		QString tmpPath();
-		void setTmpPath(const QString & path);
+        QString ffProbePath();
+        void setFFProbePath(const QString & path);
 
-		QString nick(const QString & engine);
-		void setNick(const QString & engine, const QString & nick);
+        QString tmpPath();
+        void setTmpPath(const QString & path);
 
-		QString pass(const QString & engine);
-		void setPass(const QString & engine, const QString & pass);
+        QString nick(const QString & engine);
+        void setNick(const QString & engine, const QString & nick);
 
-		QString language();
-		void setLanguage(const QString & language);
+        QString pass(const QString & engine);
+        void setPass(const QString & engine, const QString & pass);
 
-		bool noBackup();
-		void setNoBackup(bool noBackup);
+        QString language();
+        void setLanguage(const QString & language);
+
+        QString languageBackup();
+        void setLanguageBackup(const QString & language);
+
+        bool noBackup();
+        void setNoBackup(bool noBackup);
 
 #ifdef Q_OS_MAC
-		bool showDockIcon();
-		void setShowDockIcon(bool show);
+        bool showDockIcon();
+        void setShowDockIcon(bool show);
 #endif
 
-		QList<QPair<QString, bool> > engines();
-		QStringList enginesList();
-		void setEngines(QList<QPair<QString, bool> > engines);
+        QList<QPair<QString, bool> > engines();
+        QStringList enginesList();
+        void setEngines(QList<QPair<QString, bool> > engines);
 
-		SearchPolicy searchPolicy();
-		void setSearchPolicy(SearchPolicy policy);
-		
-		DownloadPolicy downloadPolicy();
-		void setDownloadPolicy(DownloadPolicy policy);
+        SearchPolicy searchPolicy();
+        void setSearchPolicy(SearchPolicy policy);
+        
+        DownloadPolicy downloadPolicy();
+        void setDownloadPolicy(DownloadPolicy policy);
 
-		bool ppEnabled();
-		void setPpEnabled(bool enable);
+        bool ppEnabled();
+        void setPpEnabled(bool enable);
 
-		bool ppChangeEncoding();
-		void setPpChangeEncoding(bool change);
+        ChangeEncodingMethod ppEncodingMethod();
+        void setPpEncodingMethod(ChangeEncodingMethod method);
+        
+        bool ppAutoDetectEncoding();
+        void setPpAutoDetectEncoding(bool change);
 
-		bool ppAutoDetectEncoding();
-		void setPpAutoDetectEncoding(bool change);
+        QString ppEncodingFrom();
+        void setPpEncodingFrom(const QString & encoding);
 
-		QString ppEncodingFrom();
-		void setPpEncodingFrom(const QString & encoding);
+        QString ppEncodingTo();
+        void setPpEncodingTo(const QString & encoding);
 
-		QString ppEncodingTo();
-		void setPpEncodingTo(const QString & encoding);
+        bool ppShowAllEncodings();
+        void setPpShowAllEncodings(bool show);
 
-		bool ppShowAllEncodings();
-		void setPpShowAllEncodings(bool show);
+        bool ppRemoveLines();
+        void setPpRemoveLines(bool remove);
 
-		bool ppRemoveLines();
-		void setPpRemoveLines(bool remove);
+        QString ppSubFormat();
+        void setPpSubFormat(const QString & subFormat);
 
-		QStringList ppRemoveWords();
-		void setPpRemoveWords(const QStringList & words);
+        QString ppSubExtension();
+        void setPpSubExtension(const QString & subExtension);
 
-		bool ppChangePermissions();
-		void setPpChangePermissions(bool change);
+        bool ppSkipConvertAds();
+        void setPpSkipConvertAds(bool skip);
 
-		QString ppPermissions();
-		void setPpPermissions(const QString & permissions);
+        QStringList ppRemoveWords();
+        void setPpRemoveWords(const QStringList & words);
 
-		QString previousDialogPath();
-		void setPreviousDialogPath(const QString & path);
+        bool changePermissions();
+        void setChangePermissions(bool change);
 
-		QStringList scanFilters();
-		void setScanFilters(const QStringList & filters);
+        QString changePermissionsTo();
+        void setChangePermissionsTo(const QString & permissions);
 
-		QString scanSkipFilters();
-		void setScanSkipFilters(const QString & filters);
+        QString previousDialogPath();
+        void setPreviousDialogPath(const QString & path);
 
-		bool scanSkipIfSubtitlesExists();
-		void setScanSkipIfSubtitlesExists(bool skip);
+        QStringList scanFilters();
+        void setScanFilters(const QStringList & filters);
 
-		QString lastScanDir();
-		void setLastScanDir(const QString & dir);
+        QString scanSkipFilters();
+        void setScanSkipFilters(const QString & filters);
 
-	private:
-		QNapiConfig();
-		QNapiConfig(const QNapiConfig &);
-		~QNapiConfig();
+        bool scanSkipIfSubtitlesExists();
+        void setScanSkipIfSubtitlesExists(bool skip);
 
-		QSettings *settings;
+        QString lastScanDir();
+        void setLastScanDir(const QString & dir);
 
-	friend QNapiConfig& GlobalConfig();
+    private:
+        QNapiConfig();
+        QNapiConfig(const QNapiConfig &);
+        ~QNapiConfig();
+
+        QSettings *settings;
+        bool isPortableMode;
+
+    friend QNapiConfig& GlobalConfig();
 };
 
 QNapiConfig & GlobalConfig();
