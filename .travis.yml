@@ -7,6 +7,6 @@ before_install:
     - sudo apt-get install -qq qt5-qmake qt55base
     - . /opt/qt55/bin/qt55-env.sh
 script:
-    - qmake -qt=qt5 -v
-    - qmake -qt=qt5
+    - qmake -v
+    - qmake
     - make
